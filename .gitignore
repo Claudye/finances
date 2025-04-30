@@ -1,0 +1,54 @@
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Python bytecode and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Log files
+*.log
+
+# SQLite database files
+*.sqlite3
+*.db
+
+# Environment variables and local secrets
+.env
+.env.*
+
+# IDE configurations
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker-specific files
+*.pid
+docker-compose.override.yml
+
+# Test-related files and coverage reports
+htmlcov/
+.tox/
+.nox/
+coverage.*
+.cache/
+.pytest_cache/
+
+# Type checkers and linters
+.mypy_cache/
+.dmypy.json
+.pyre/
+.pylint.d/
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
