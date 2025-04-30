@@ -1,0 +1,142 @@
+# Finances – Multi Online Payment Service
+
+This project is a unified payment solution that integrates multiple mobile and banking payment gateways. It is built on **FastAPI** and offers a modular architecture to support various payment providers such as **MTN Mobile Money, PayPal, Stripe, and others**.
+
+🎯 **Service Objectives**
+- Facilitate online payments with one solution effortlessly.
+
+---
+
+## Features
+- **Self-hosted project:** Deploy and run the payment service on your own infrastructure.
+- **Multiple Payment Providers:** Integrates with **MTN Mobile Money**, **PayPal**, **Stripe**, and more.
+- **Customizable Payment Flows:** Customize the payment process for different use cases. 
+- **Secure Payment Handling:** Secure transactions using industry-standard protocols.
+
+---
+
+## Supported Providers:
+- MTN Mobile Money (coming soon)
+- PayPal (coming soon)
+- Stripe (coming soon)
+
+---
+
+## API Endpoints
+
+### 1. Initialize a Payment
+**Endpoint:** `POST /transactions/:provider/init`
+
+**Request Body:**
+```json
+{
+  "amount": 100,
+  "orderId": "1234",
+  "payerReference": "0100000378",
+  "description": "New transaction",
+  "callback": "https://your-callback-url.com"
+}
+```
+
+**Validation Rules:**
+- `amount`: Required, number, greater than 0
+- `orderId`: Required
+- `payerReference`: Required (phone number, card number, etc.)
+- `description`: Required, min length 1, max length 100
+- `callback`: Optional, must be a valid URL
+- `returnUrl`: Optional, must be a valid URL
+- `cancelUrl`: Optional, must be a valid URL
+
+**Response:**
+```json
+{
+  "isUSSD": true,
+  "isRedirect": false,
+  "success": true,
+  "transaction": {
+    "payerReference": "2296411378",
+    "orderId": "1234",
+    "transactionRef": "7ebcb193-51d6-465a-b292-62aca5f60f35",
+    "reference": "7ebcb193-51d6-465a-b292-62aca5f60f35",
+    "amount": 100,
+    "status": "CREATED",
+    "providerCode": "MTN",
+    "currency": "EUR",
+    "callbackUrl": "https://your-callback-url.com",
+    "description": "New transaction",
+    "statusNote": "Transaction created successfully",
+    "environment": "sandbox",
+    "paymentType": "USSD",
+    "statusDate": "2025-02-05T06:59:06.734+00:00",
+    "createdAt": "2025-02-05T06:59:06.734+00:00",
+    "updatedAt": "2025-02-05T06:59:06.734+00:00",
+    "id": 9
+  }
+}
+```
+
+*If `isRedirect` is `true`, an additional field `paymentUrl` will be present in the response.*
+
+### Example Request using cURL
+```sh
+curl -X POST https://your-api.com/transactions/MTN/init \
+     -H "Content-Type: application/json" \
+     -d '{
+           "amount": 100,
+           "orderId": "1234",
+           "payerReference": "2296411378",
+           "description": "New transaction",
+           "callback": "https://your-callback-url.com"
+         }'
+```
+
+### 2. Verify a Transaction
+**Endpoint:** `GET /transactions/:provider/verify/:reference`
+
+**Response:**
+```json
+{
+  "success": true,
+  "transaction": {
+    "reference": "7ebcb193-51d6-465a-b292-62aca5f60f35",
+    "status": "COMPLETED",
+    "amount": 100,
+    "currency": "EUR",
+    "providerCode": "MTN",
+    "statusNote": "Transaction successfully processed",
+    "updatedAt": "2025-02-05T07:10:00.000+00:00"
+  }
+}
+```
+
+### Example Request using cURL
+```sh
+curl -X GET https://your-api.com/transactions/MTN/verify/7ebcb193-51d6-465a-b292-62aca5f60f35
+```
+
+---
+
+## Error Handling
+- **`404 PROVIDER_NOT_FOUND`**: Provider not found
+- **`400 REFERENCE_REQUIRED`**: Transaction reference is required
+- **`500 TOKEN_GENERATION_FAILED`**: Failed to generate token
+- **`500 VERIFICATION_FAILED`**: Failed to verify transaction
+
+---
+
+## Installation & Usage
+1. Clone the repository
+2. Install dependencies: `pip install -r requirements.txt`
+3. Configure the `.env` file with necessary credentials
+4. Run the project: `uvicorn main:app --reload`
+
+---
+
+## Contributing
+Feel free to open issues and submit pull requests to improve the project!
+
+---
+
+This project is maintained under the MIT License.
+
+--- 
